@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Final Project - Data Vis</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+		<script type="text/javascript" src="../d3.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link rel="stylesheet" href='styles.css'/>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto','sans-serif';
+      }
+      #map-us {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+      #intro {
+        position: absolute;
+        left: 0;
+        bottom: 45px;
+        width: 425px;
+        z-index: 2;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+        color: white;
+        opacity: 0.85;
+        visibility: visible;
+      }
+      #right-panel {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 20px;
+        width: 15px;
+        z-index: 2;
+        background-color: black;
+        padding: 5px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+        color: white;
+        opacity: 0.25;
+        transition: all 1.2s;
+        overflow-x: hidden;
+      }
+      #panel-txt {
+        visibility: collapse;
+        transition: all .1s;
+        display: block;
+      }
+      .mapboxgl-popup {
+        max-width: 400px;
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      }
+      /* toggle */
+      #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        left: 10px;
+        width: 120px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+      }
+      #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        text-align: center;
+      }
+      #menu a:last-child {
+        border: none;
+      }
+      #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+      }
+      #menu a.active {
+        background-color: #EED322;
+        color: #404040;
+      }
+      #menu a.active:hover {
+        background: #CA8323;
+      }
+
+      .map-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.5);
+        margin-right: 20px;
+        overflow: auto;
+        font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+      }
+      .map-overlay2 {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin-right: 20px;
+        overflow: auto;
+        color:white;
+        font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+      }
+
+      #legend {
+        font-size: 13px;
+        padding: 10px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+      .row {
+        height: 12px;
+        width: 100%;
+      }
+      .colors {
+        background: linear-gradient(to right,#b03a2e,#e74c3c,#ec7063,#f1948a,#fadbd8,#fdfefe,#d4efdf,#a9dfbf,#52be80,#27ae60,#1e8449);
+        fill-opacity: 0.75;
+        margin-bottom: 5px; 
+      }
+      .label {
+        width: 8%;
+        display: inline-block;
+        text-align: center;
+        font-size: small;
+        color:white;
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <nav id="menu"></nav>
+    <div id="map-us"></div>
+    <div id="intro">
+      <section id="left-intro">
+        <h3>Counties With Amazon Warehouses</h3>
+        <h5><em>by Jacob Hu | Shuang Bi | Yuan Li</em></h5>
+        <p>Intro Text     Textdsakfjd;glksajdf;lksajdfl;ks fjdksalf;ja;sldkfj
+          fjkdlsa;jf
+          fjksdlf;jaslkjf
+          jfsdklaf;jsalkdfj;salkdf\<br>
+          Textdsakfjd;glksajdf;lksajdfl;ks fjdksalf;ja;sldkfj
+            fjkdlsa;jf
+            fjksdlf;jaslkjf
+            jfsdklaf;jsalkdfj;salkdf\
+            Textdsakfjd;glksajdf;lksajdfl;ks fjdksalf;ja;sldkfj
+              fjkdlsa;jf
+              fjksdlf;jaslkjf
+              jfsdklaf;jsalkdfj;salkdf\
+              Textdsakfjd;glksajdf;lksajdfl;ks fjdksalf;ja;sldkfj
+                fjkdlsa;jf
+                fjksdlf;jaslkjf
+                jfsdklaf;jsalkdfj;salkdf\</p>
+        <hr>
+        <p><b>To get started, please use the toggle menu above.<b></p>
+      </section>
+    </div>
+    <div id="right-panel">
+      <section id="panel-txt">
+        <h4>Title of this portion</h4>
+        <p>Textdsakfjd;glksajdf;lksajdfl;ks fjdksalf;ja;sldkfj
+          fjkdlsa;jf
+          fjksdlf;jaslkjf
+          jfsdklaf;jsalkdfj;salkdf\</p>
+        <p>Textdsakfjd;glksajdf;lksajdfl;ks fjdksalf;ja;sldkfj
+          fjkdlsa;jf
+          fjksdlf;jaslkjf
+          jfsdklaf;jsalkdfj;salkdf\</p>
+      </section>
+    </div>
+
+
+      
+    <div class='map-overlay2' id='legend'> 
+        <p style = 'margin-top: 0; font-size:1em'>Percentage Change of Socio-econ Indicator from 2014 to 2018</p>
+ 
+        <div class='row colors'></div>
+        <div class='row labels'>
+           <div class = 'label'>-50%</div>
+           <div class = 'label'>-40%</div>
+           <div class = 'label'>-30%</div>
+           <div class = 'label'>-20%</div>
+           <div class = 'label'>-10%</div>
+           <div class = 'label'>0</div>
+           <div class = 'label'>10%</div>
+           <div class = 'label'>20%</div>
+           <div class = 'label'>30%</div>
+           <div class = 'label'>40%</div>
+           <div class = 'label'>50%</div>
+        </div>
+
+    </div>
+
+    <section class="data">
+
+      <!-- Main script -->
+      <script>
+      //this part of the example can be found at mapbox: https://docs.mapbox.com/mapbox-gl-js/example/simple-map/
+      //you will find the accessToken and the style for your map under "Share" in your specific map in mapbox studio
+      mapboxgl.accessToken = 'pk.eyJ1IjoieWgzMTc1IiwiYSI6ImNraGdjYzR5aDBnNG4ycXFkOXc5a3U0cDQifQ.fcl-Godi2KXbDishUgaFSg';
+
+      //mapbox
+      var map = new mapboxgl.Map({
+        container: 'map-us',//thi sis the div that you have mad above in html that you are now placing your map in
+        style: 'mapbox://styles/yh3175/ckhgchrpn1c1m19pmfy0vveta',//you will find the accessToken under "Share" in your specific map in mapbox studio
+        center: [-104, 38],//the center of the map can be set to any initial value of [lng,lat]
+        zoom: 4//note that some layers have zoom limits - for example, streets and building footprints are not visible when zoomed out
+      });
+
+        //COUNTIES
+        //load counties file:
+        map.on('load', function () {
+
+          //add data:
+          map.addSource('counties',{
+            'type':'geojson',
+            'data':'Data/Amzn_Counties2.geojson'
+          });
+
+          //counties shape colors by SPL data:
+          map.addLayer({
+            'id':'amzn-counties',
+            'type':'fill',
+            'source':'counties',
+            'layout':{
+              'visibility':'none'
+            },
+            'paint':{
+              'fill-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'amzfilter_SPL_THEME1_2'],
+              -1,
+              '#F2F12D',
+              -0.5,
+              '#EED322',
+              -0.1,
+              '#E6B71E',
+              -0.05,
+              '#DA9C20',
+              0,
+              '#CA8323',
+              0.05,
+              '#B86B25',
+              0.1,
+              '#A25626',
+              0.5,
+              '#8B4225',
+              1,
+              '#723122'
+              ],
+              'fill-opacity': 0.75
+              }
+        });
+
+        // counties density rural:
+        map.addLayer({
+          'id':'Rural',
+          'type':'fill',
+          'source':'counties',
+          'filter': ['<=', 'amzfilter_Density', 800],
+          'layout':{
+            'visibility':'none'
+          },
+          'paint':{
+            'fill-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'amzfilter_Density'],
+              0,
+              '#f5eef8',
+              500,
+              '#ebdef0',
+              1000,
+              '#c39bd3',
+              1500,
+              '#af7ac5',
+              2000,
+              '#9b59b6',
+              2500,
+              '#633974'
+            ],
+            'fill-opacity': 0.75
+          }
+        });
+
+        // counties density suburb:
+        map.addLayer({
+          'id':'Suburb',
+          'type':'fill',
+          'source':'counties',
+          'filter': ['all',
+            ['>', 'amzfilter_Density', 800],
+            ['<=', 'amzfilter_Density', 3500]
+          ],
+          'layout':{
+            'visibility':'none'
+          },
+          'paint':{
+            'fill-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'amzfilter_Density'],
+              0,
+              '#f5eef8',
+              500,
+              '#ebdef0',
+              1000,
+              '#c39bd3',
+              1500,
+              '#af7ac5',
+              2000,
+              '#9b59b6',
+              2500,
+              '#633974'
+            ],
+            'fill-opacity': 0.75
+          }
+        });
+
+        // counties density urban:
+        map.addLayer({
+          'id':'Urban',
+          'type':'fill',
+          'source':'counties',
+          'filter': ['>', 'amzfilter_E_TOTPOP', 3500],
+          'layout':{
+            'visibility':'none'
+          },
+          'paint':{
+            'fill-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'amzfilter_Density'],
+              0,
+              '#f5eef8',
+              500,
+              '#ebdef0',
+              1000,
+              '#c39bd3',
+              1500,
+              '#af7ac5',
+              2000,
+              '#9b59b6',
+              2500,
+              '#633974'
+            ],
+            'fill-opacity': 0.75
+          }
+        });
+
+
+
+
+        //toggle - below -
+
+        //toggle menu variable:
+        //future variables:['population','theme1','lgmetro', 'mdmetro',
+        //'smmetro','micropolitan','noncore']
+
+        var toggleableLayerIds = ['amzn-counties', 'Density', 'Rural',
+        'Suburb', 'Urban'];
+
+        //toggle script:
+        for (var i = 0; i < toggleableLayerIds.length; i++) {
+          var id = toggleableLayerIds[i];
+
+          var link = document.createElement('a');
+
+          if (i == 0) {
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = id;
+            map.setLayoutProperty('amzn-counties', 'visibility', 'visible');
+          } else {
+            link.href = '#';
+            link.className = '';
+            link.textContent = id;
+          }
+
+          link.onclick = function (e) {
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+            //map zooms out
+            map.flyTo({
+              center: [-104, 38],
+              zoom: 4
+            });
+
+            //show intro paragraph once map zooms out again
+            document.getElementById('intro').style.visibility = "visible";
+
+            // toggle layer visibility by changing the layout object's visibility property
+            if (visibility === 'visible') {
+              map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+              this.className = '';
+              document.getElementById('intro').style.visibility = "visible";
+            } else {
+              this.className = 'active';
+              map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            }
+          };
+
+          var layers = document.getElementById('menu');
+          layers.appendChild(link);
+        };
+
+        //on-click functions
+        //on click amzn-counties
+        map.on('click', 'amzn-counties', function (e) {
+          map.flyTo({
+            center: e.lngLat,
+            zoom: 9
+          });
+          document.getElementById('intro').style.visibility = "hidden";
+          new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.amzfilter_SPL_THEME1_2+' SPL_theme1_test')
+          .addTo(map);
+        });
+
+        //on click county densities:
+        map.on('click', 'Density', function(e) {
+          map.flyTo({
+            center: e.lngLat,
+            zoom: 9
+          });
+          document.getElementById('intro').style.visibility = "hidden";
+          new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.amzfilter_Density + ' Density_test')
+          .addTo(map);
+        });
+        map.on('click', 'Rural', function(e) {
+          map.flyTo({
+            center: e.lngLat,
+            zoom: 9
+          });
+          document.getElementById('intro').style.visibility = "hidden";
+          new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.amzfilter_Density + ' Density_test')
+          .addTo(map);
+        });
+        map.on('click', 'Suburb', function(e) {
+          map.flyTo({
+            center: e.lngLat,
+            zoom: 9
+          });
+          document.getElementById('intro').style.visibility = "hidden";
+          new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.amzfilter_Density + ' Density_test')
+          .addTo(map);
+        });
+        map.on('click', 'Urban', function(e) {
+          map.flyTo({
+            center: e.lngLat,
+            zoom: 9
+          });
+          document.getElementById('intro').style.visibility = "hidden";
+          new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.amzfilter_Density + ' Density_test')
+          .addTo(map);
+        });
+
+        //mouseover
+        map.on('mouseenter', 'amzn-counties', function () {
+          map.getCanvas().style.cursor = 'pointer';
+          document.getElementById("right-panel").style.width = "450px";
+          document.getElementById("right-panel").style.opacity = "0.6";
+          document.getElementById("panel-txt").style.visibility = "visible";
+        });
+        map.on('mouseenter', 'Density', function () {
+          map.getCanvas().style.cursor = 'pointer';
+          document.getElementById("right-panel").style.width = "450px";
+          document.getElementById("right-panel").style.opacity = "0.6";
+          document.getElementById("panel-txt").style.visibility = "visible";
+        });
+        map.on('mouseenter', 'Rural', function () {
+          map.getCanvas().style.cursor = 'pointer';
+          document.getElementById("right-panel").style.width = "450px";
+          document.getElementById("right-panel").style.opacity = "0.6";
+          document.getElementById("panel-txt").style.visibility = "visible";
+        });
+        map.on('mouseenter', 'Suburb', function () {
+          map.getCanvas().style.cursor = 'pointer';
+          document.getElementById("right-panel").style.width = "450px";
+          document.getElementById("right-panel").style.opacity = "0.6";
+          document.getElementById("panel-txt").style.visibility = "visible";
+        });
+        map.on('mouseenter', 'Urban', function () {
+          map.getCanvas().style.cursor = 'pointer';
+          document.getElementById("right-panel").style.width = "450px";
+          document.getElementById("right-panel").style.opacity = "0.6";
+          document.getElementById("panel-txt").style.visibility = "visible";
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'amzn-counties', function () {
+          map.getCanvas().style.cursor = '';
+          document.getElementById("right-panel").style.width = "15px";
+          document.getElementById("right-panel").style.opacity = "0.25";
+          document.getElementById("panel-txt").style.visibility = "collapse";
+        });
+        map.on('mouseleave', 'Density', function () {
+          map.getCanvas().style.cursor = '';
+          document.getElementById("right-panel").style.width = "15px";
+          document.getElementById("right-panel").style.opacity = "0.25";
+          document.getElementById("panel-txt").style.visibility = "collapse";
+        });
+        map.on('mouseleave', 'Rural', function () {
+          map.getCanvas().style.cursor = '';
+          document.getElementById("right-panel").style.width = "15px";
+          document.getElementById("right-panel").style.opacity = "0.25";
+          document.getElementById("panel-txt").style.visibility = "collapse";
+        });
+        map.on('mouseleave', 'Suburb', function () {
+          map.getCanvas().style.cursor = '';
+          document.getElementById("right-panel").style.width = "15px";
+          document.getElementById("right-panel").style.opacity = "0.25";
+          document.getElementById("panel-txt").style.visibility = "collapse";
+        });
+        map.on('mouseleave', 'Urban', function () {
+          map.getCanvas().style.cursor = '';
+          document.getElementById("right-panel").style.width = "15px";
+          document.getElementById("right-panel").style.opacity = "0.25";
+          document.getElementById("panel-txt").style.visibility = "collapse";
+        });
+      });
+
+      </script>
+    </section>
+  </body>
+</html>

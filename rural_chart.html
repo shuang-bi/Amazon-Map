@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<style>
+
+			body {
+			  font-family: "Helvetica Neue", sans-serif;
+				margin: 0 auto;
+				display: table;
+			}
+			.COUNTY, .SPL {
+				font-size: .7em;
+			}
+
+		</style>
+	</head>
+	<body>
+  	<div class="chart"></div>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script>
+    
+
+      var margin = {top: 0, right: 0, bottom: 0, left: 0},
+        width = 700 - margin.left - margin.right,
+        height = 850;
+
+      var svg = d3.select(".chart").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var x = d3.scaleLinear()
+          .range([0,width]);
+
+      var y = d3.scaleBand()
+          .rangeRound([height,0])
+          .padding(0.2);
+
+      d3.csv("Data/Amazon Rural County SPL Change.csv",types,function(error,data){
+
+        if (error) throw error;
+
+        data.sort(function(a,b){
+          return b.SPL - a.SPL;
+        });
+
+        x.domain(d3.extent(data, function(d){ return d.SPL; }));
+        y.domain(data.map(function(d) { return d.COUNTY; }));
+
+        svg.selectAll(".bar")
+            .data(data)
+          .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d){ return d.SPL < 0 ? x(d.SPL) : x(0); })
+						.attr("width", function(d){ return d.SPL < 0 ? x(d.SPL * -1) - x(0) : x(d.SPL) - x(0); })
+            .attr("y", function(d){ return y(d.COUNTY); })
+						.attr("height", y.bandwidth())
+						.attr("fill", function(d){ return d.SPL < 0 ? "#27ae60": "#e74c3c"; });
+						
+				svg.selectAll(".SPL")
+						.data(data)
+					.enter().append("text")
+						.attr("class", "SPL")
+						.attr("x", function(d){
+							if (d.SPL < 0){
+								return (x(d.SPL * -1) - x(0)) > 20 ? x(d.SPL) + 2 : x(d.SPL) - 1;
+							} else {
+								return (x(d.SPL) - x(0)) > 20 ? x(d.SPL) - 2 : x(d.SPL) + 1;
+							}
+						})
+						.attr("y", function(d){ return y(d.COUNTY); })
+						.attr("dy", y.bandwidth() - 2.55)
+						.attr("text-anchor", function(d){
+							if (d.SPL < 0){
+								return (x(d.SPL * -1) - x(0)) > 20 ? "start" : "end";
+							} else {
+								return (x(d.SPL) - x(0)) > 20 ? "end" : "start";
+							}
+						})
+						.style("fill", function(d){
+							if (d.SPL < 0){
+								return (x(d.SPL * -1) - x(0)) > 20 ? "#fff" : "#3a403d";
+							} else {
+								return (x(d.SPL) - x(0)) > 20 ? "#fff" : "#3a403d";
+							}
+						})
+						.text(function(d){ return d.SPL; });
+
+				svg.selectAll(".COUNTY")
+						.data(data)
+					.enter().append("text")
+						.attr("class", "COUNTY")
+						.attr("x", function(d){ return d.SPL < 0 ? x(0) + 2.55 : x(0) - 2.55 })
+						.attr("y", function(d){ return y(d.COUNTY); })
+						.attr("dy", y.bandwidth() - 2.55)
+						.attr("text-anchor", function(d){ return d.SPL < 0 ? "start" : "end"; })
+						.text(function(d){ return d.COUNTY; });
+
+				svg.append("line")
+						.attr("x1", x(0))
+						.attr("x2", x(0))
+						.attr("y1", 0 + margin.top)
+						.attr("y2", height - margin.top)
+						.attr("stroke", "#3a403d")
+            .attr("stroke-width", "1px");
+
+			     svg.append("line")
+						.attr("x1", x(-0.069))
+						.attr("x2", x(-0.069))
+						.attr("y1", 0 + margin.top)
+						.attr("y2", height - margin.top)
+						.attr("stroke-width", 1)
+      .attr("stroke", "red")
+      .attr("stroke-dasharray", "3,3")
+			     
+	             svg.append("text")
+				 .attr("x", x(-0.25))
+				.attr("y", height)
+				.style("fill", "red")
+				.text("AVERAGE SPL CHANGE OF COUNTIES WITHOUT AMAZON WAREHOUSES -0.069")
+
+				
+
+            
+
+
+      });
+
+      function types(d){
+				d.SPL = +d.SPL;
+				return d;
+      }
+
+    </script>
+
+	</body>
+</html>

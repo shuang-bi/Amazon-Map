@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Amazon Warehouses Mapping</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script type="text/javascript" src="../d3.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link rel="stylesheet" href='styles.css'/>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link href="node_modules/bootstrap/js/dist/modal.js" media="screen">
+
+  </head>
+  <body>
+
+    <nav id="menu" class="col-sm"></nav>
+
+    <a target='_blank' class="chartB w3-button w3-padding-small" id="button1" 
+    style = "font-size: 0.8em" href="./urban_chart.html">Chart</a>
+
+    <a target='_blank' class="chartB w3-button w3-padding-small w3-" id="button2" 
+    style = "font-size: 0.8em"  href="./suburban_chart.html">Chart</a>
+
+    <a target='_blank' class="chartB w3-button w3-padding-small w3-" id="button3" 
+    style = "font-size: 0.8em"  href="./rural_chart.html">Chart</a>
+
+    <div id="map-us"></div>
+
+
+    
+    <div class='map-overlay2' id='legend'> 
+        <p style = 'margin-top: 0; font-size:1em'> Percentile Ranking of Socio-econ Indicator in 2018 SVI Data</p>
+
+        <div class='row colors1'></div>
+        <div class='row labels'>
+           <div class = 'label1'>0</div>
+           <div class = 'label1'>10%</div>
+           <div class = 'label1'>20%</div>
+           <div class = 'label1'>30%</div>
+           <div class = 'label1'>40%</div>
+           <div class = 'label1'>50%</div>
+           <div class = 'label1'>60%</div>
+           <div class = 'label1'>70%</div>
+           <div class = 'label1'>80%</div>
+           <div class = 'label1'>90%</div>
+           <div class = 'label1'>100%</div>
+        </div>
+
+      <p style = 'margin-top: 3; font-size:1em'>Percentage Change of Socio-econ Indicator from 2014 to 2018</p>
+
+      <div class='row colors2'></div>
+      <div class='row labels'>
+         <div class = 'label2'>-50%</div>
+         <div class = 'label2'>-40%</div>
+         <div class = 'label2'>-30%</div>
+         <div class = 'label2'>-20%</div>
+         <div class = 'label2'>-10%</div>
+         <div class = 'label2'>0</div>
+         <div class = 'label2'>10%</div>
+         <div class = 'label2'>20%</div>
+         <div class = 'label2'>30%</div>
+         <div class = 'label2'>40%</div>
+         <div class = 'label2'>50%</div>
+      </div>
+      <p style="font: size 0.7em; font-style: italic">Indicator = EPL_POV + EPL_UNEMP + EPL_PCI + EPL_NOHSDP<br>
+    Bigger number means bigger social-economic vulnerability</p>
+
+  </div>
+    <div id="intro">
+      <section id="left-intro">
+        <h3>Counties With Amazon Warehouses</h3>
+        <h5><em>by Jacob Hu | Shuang Bi | Yuan Li</em></h5>
+        <p>When everything came to a halt during this pandemic, Amazon speeded up its operation...<br>
+            The company refused to shut down their facilities, taking advantage of the economic desperation caused by COVID to increase its market dominance.<br>
+            By 2021, there will be <b>498</b> Amazon warehouses in the U.S., across <b>204</b> counties and <b>42</b> states.<br>
+            Looking at the sociol economic indicator from <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html">CDC SVI data </a>in counties with Amazon warehouses, <br>
+            we found that Amazon came to the relatively vulnerable communites and local SVI improved from 2014 to 2018, 
+            It aligned with the reason why local government invited Amazon, but was not sufficient to describe the 
+            <a href="https://www.ufcw.org/press-releases/ftcamazon/#:~:text=%E2%80%9CAmazon%20represents%20a%20clear%20and,employees%20throughout%20its%20distribution%20centers.">>deteriorated working conditions</a> in these warehouses...
+        </p>
+        <hr>
+        <p><b>To get started, please use the toggle menu above.<b></p>
+      </section>
+    </div>
+    <section class="data">
+      <script src='map.js'></script> 
+    </section>
+  </body>
+</html>

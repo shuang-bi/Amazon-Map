@@ -65,6 +65,7 @@ body {
   #menu {
     background: #fff;
     position: absolute;
+    width: 80px;
     z-index: 1;
     top: 10px;
     left: 10px;

@@ -19,7 +19,7 @@ map.on('load', function () {
     //add data:
     map.addSource('counties',{
     'type':'geojson',
-    'data':'Data/Amzn_Counties_revise.geojson'
+    'data':'./Data/Amzn_Counties_revise.geojson'
     });
 
     //counties shape colors by SPL data:

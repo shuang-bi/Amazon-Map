@@ -64,11 +64,7 @@ body {
   /* toggle */
   #menu {
     background: #fff;
-    position: absolute;
-    width: 100px;
-    z-index: 1;
-    top: 10px;
-    left: 10px;
+    
     border: 1px solid rgba(0, 0, 0, 0.4);
     font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
   }

@@ -64,7 +64,11 @@ body {
   /* toggle */
   #menu {
     background: #fff;
-    
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    left: 10px;
+    width: 120px;
     border: 1px solid rgba(0, 0, 0, 0.4);
     font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
   }
@@ -123,13 +127,14 @@ body {
     height: 12px;
     width: 100%;
   }
-  .colors2 {
-    background: linear-gradient(to left,#b03a2e,#e74c3c,#ec7063,#f1948a,#fadbd8,#fdfefe,#d4efdf,#a9dfbf,#52be80,#27ae60,#1e8449);
+
+  .colors1 {
+    background: linear-gradient(to left,#b03a2e,#ec7063,#f1948a,#fdfefe,#a9dfbf,#52be80,#27ae60,#1e8449);
     fill-opacity: 0.75;
     margin-bottom: 5px; 
   }
 
-  .colors1 {
+  .colors3 {
     background: linear-gradient(to right,#55552b,#888844,#bbbb77,#ddddbb,#ffffff,#f0b27a,#df9f9f,#c65353,#993333,#602020);
     fill-opacity: 0.75;
     margin-bottom: 5px; 

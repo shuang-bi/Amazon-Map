@@ -134,19 +134,21 @@ map.on('load', function () {
         ['linear'],
         ['get', 'calc_RPL_THEME4_DF'],
         -0.5,
-        '#888844',
+        '#1e8449',
         -0.25,
-        '#bbbb77',
+        '#27ae60',
         -0.1,
-        '#ddddbb',
+        '#52be80',
+        -0.05,
+        '#a9dfbf',
         0,
-        '#ffffff',
+        '#fdfefe',
         0.1,
-        '#f0b27a',
+        '#f1948a',
         0.25,
-        '#df9f9f',
+        '#ec7063',
         0.5,
-        '#c65353',
+        '#b03a2e',
         ],
         'fill-opacity': 0.75
         }
@@ -168,22 +170,22 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
     var link = document.createElement('a');
 
     if (i == 0) {
-    link.href = '#';
-    link.className = 'active';
-    link.textContent = id;
-    map.setLayoutProperty('SVI Themes Change', 'visibility', 'visible');
+      link.href = '#';
+      link.className = 'active';
+      link.textContent = id;
+      map.setLayoutProperty('SVI Themes Change', 'visibility', 'visible');
     } else {
-    link.href = '#';
-    link.className = '';
-    link.textContent = id;
+      link.href = '#';
+      link.className = '';
+      link.textContent = id;
     }
 
     link.onclick = function (e) {
-    var clickedLayer = this.textContent;
-    e.preventDefault();
-    e.stopPropagation();
+      var clickedLayer = this.textContent;
+      e.preventDefault();
+      e.stopPropagation();
 
-    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+      var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
 
     //map zooms out
     map.flyTo({
@@ -192,17 +194,16 @@ for (var i = 0; i < toggleableLayerIds.length; i++) {
     });
 
     //show intro paragraph once map zooms out again
-    document.getElementById('intro').style.visibility = "visible";
+    //document.getElementById('intro').style.visibility = "visible";
 
     // toggle layer visibility by changing the layout object's visibility property
     if (visibility === 'visible') {
         map.setLayoutProperty(clickedLayer, 'visibility', 'none');
         this.className = '';
-        document.getElementById('intro').style.visibility = "visible";
-    } else {
+        } else {
         this.className = 'active';
         map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-    }
+        }
     };
 
     var layers = document.getElementById('menu');
